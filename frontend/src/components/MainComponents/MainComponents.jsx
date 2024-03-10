@@ -38,11 +38,11 @@ const MainComponents = () => {
   }, []);
   return (
     <div className="mx-4">
-         {/* {location && (
+         {location && (
         <p>
           Current Location: {location.latitude}, {location.longitude}
         </p>
-      )} */}
+      )}
      <EcoList/>
    
      

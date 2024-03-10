@@ -59,6 +59,8 @@ export const authUser = expressAsyncHandler(async (req, res) => {
       _id: user._id,
       name: user.name,
       email: user.email,
+      username: user.username,
+      avatar: user.avatar,
     });
   } else {
     res.status(400);

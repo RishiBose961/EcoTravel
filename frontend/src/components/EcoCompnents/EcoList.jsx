@@ -6,7 +6,7 @@ const EcoList = () => {
     <div> <div>
     {" "}
     <p className="text-2xl font-bold mt-2">Eco Friendly Hotel</p>
-    <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 mt-5">
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-5">
       {data.map((item) => (
         <div className="card w-full bg-base-100 shadow-xl ring-1 ring-white">
           <figure>
