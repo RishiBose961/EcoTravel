@@ -7,4 +7,6 @@ const router = express.Router();
 
 router.route("/newhotels").post(protect, createHotels);
 
+
+
 export default router;
