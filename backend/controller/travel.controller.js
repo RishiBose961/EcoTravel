@@ -55,10 +55,14 @@ export const getHotelandTravel = expressAsyncHandler(async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 4;
+    const country = req.query.country || "";
     const city = req.query.city || "";
 
     let query = {};
 
+    if (country !== "All") {
+      query.country = country;
+    }
     if (city !== "All") {
       query.city = city;
     }

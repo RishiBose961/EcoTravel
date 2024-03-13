@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
 import "./index.css";
+import "./App.css";
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -20,6 +21,7 @@ import {
   QueryClientProvider,
 } from "@tanstack/react-query";
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import IndividualHotels from "./pages/IndividualAll/IndividualHotels.jsx";
 
 const queryClient = new QueryClient();
 
@@ -30,6 +32,7 @@ const router = createBrowserRouter(
       <Route path="" element={<PrivateRoute />}>
         <Route index={true} path="/" element={<Home />} />
         <Route path="/new" element={<CreateNew />} />
+        <Route path="/hotels/:id" element={<IndividualHotels/>} />
       </Route>
     </Route>
   )

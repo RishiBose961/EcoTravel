@@ -26,6 +26,10 @@ const hotelSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    cheapestPrice:{
+      type: Number,
+      required: true,
+  },
     location: {
       type: { type: String, required: true },
       coordinates: [],

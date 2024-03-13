@@ -1,15 +1,15 @@
-import  { useEffect, useState } from "react";
+// eslint-disable-next-line no-unused-vars
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import ImageComponents from "./ImageComponents";
 
-const TravelHotels = () => {
-  const [hotelname, setHotelname] = useState("");
+const StoryCreate = () => {
+  const [storytitle, setstorytitle] = useState("");
+  const [storydescription, setstorydescription] = useState("");
   const [country, setCountry] = useState("");
   const [city, setCity] = useState("");
-  const [phone, setPhone] = useState("");
-  const [hoteladdress, setHoteladdress] = useState("");
-  const [cheapestPrice, setcheapestPrice] = useState("");
+
   // const [buttonDisabled, setButtonDisabled] = useState(false);
 
   const [url, setUrl] = useState("");
@@ -17,47 +17,31 @@ const TravelHotels = () => {
   // eslint-disable-next-line no-unused-vars
   const [uploaded, setUploaded] = useState();
 
-  const [informUser, setinformUser] = useState([]);
-
-  const getLocation = async () => {
-    const location = await axios.get("https://ipapi.co/json");
-    setinformUser(location.data);
-  };
-
-  useEffect(() => {
-    getLocation();
-  }, []);
-
-
   const navigate = useNavigate();
   useEffect(() => {
     if (url) {
       // setButtonDisabled(true);
-      fetch("/api/hotels/newhotels", {
+      fetch("/api/story/newstorys", {
         method: "post",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          hotelname,
+          storytitle,
+          storydescription,
           country,
-          phone,
-          hoteladdress,
           city,
-          cheapestPrice,
           // Send all public IDs and URLs for flexibility
-          imagehotel: url.map((imageDatas) => imageDatas.secure_url),
-          latitude: informUser.latitude,
-        longitude: informUser.longitude,
+          imagestory: url.map((imageDatas) => imageDatas.secure_url),
         }),
       })
         .then((res) => res.json())
         .then((data) => {
-          // console.log(data);
+          console.log(data);
           if (data.error) {
             alert("Something went wrong");
           } else {
-            alert(`Successfully created ${hotelname}`);
+            alert(`Successfully created ${storytitle}`);
             navigate("/");
           }
         })
@@ -100,20 +84,32 @@ const TravelHotels = () => {
     <div>
       <div className="grid grid-cols-1 lg:grid-cols-3 mx-2 gap-2">
         <div className=" col-span-2 mt-3">
-          <span className="label-text">Hotel Name</span>
-          <input
-            type="text"
-            placeholder="Type here"
-            value={hotelname}
-            onChange={(e) => setHotelname(e.target.value)}
-            className="input input-bordered input-primary w-full"
-          />
           <div className="grid grid-cols-2 gap-4 mt-3">
+            <div>
+              <span className="label-text">Story Title</span>
+              <input
+                type="text"
+                placeholder="Story Title"
+                value={storytitle}
+                onChange={(e) => setstorytitle(e.target.value)}
+                className="input input-bordered input-primary w-full"
+              />
+            </div>
+            <div>
+              <span className="label-text">Description </span>
+              <input
+                type="text"
+                placeholder="Description"
+                value={storydescription}
+                onChange={(e) => setstorydescription(e.target.value)}
+                className="input input-bordered input-primary w-full"
+              />
+            </div>
             <div>
               <label className="label-text">Country</label>
               <input
                 type="text"
-                placeholder="Type here"
+                placeholder="Country"
                 value={country}
                 onChange={(e) => setCountry(e.target.value)}
                 className="input input-bordered input-primary w-full capitalize"
@@ -124,53 +120,30 @@ const TravelHotels = () => {
               <label className="label-text">City</label>
               <input
                 type="text"
-                placeholder="Type here"
+                placeholder="City"
                 value={city}
                 onChange={(e) => setCity(e.target.value)}
                 className="input input-bordered input-primary w-full capitalize"
               />
             </div>
-            <div>
-              <label className="label-text">Phone</label>
-              <input
-                type="number"
-                placeholder="Type here"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                className="input input-bordered input-primary w-full capitalize"
-              />
-            </div>
-            <div>
-              <label className="label-text">Price</label>
-              <input
-                type="number"
-                placeholder="Type here"
-                value={cheapestPrice}
-                onChange={(e) => setcheapestPrice(e.target.value)}
-                className="input input-bordered input-primary w-full capitalize"
-              />
-            </div>
-          </div>
-          <div className="mt-2">
-            <label className="label-text">Address</label>
-            <input
-              type="text"
-              placeholder="Type here"
-              value={hoteladdress}
-              onChange={(e) => setHoteladdress(e.target.value)}
-              className="input input-bordered input-primary w-full capitalize"
-            />
           </div>
 
           <div className="flex justify-center mt-4">
-
             <button className="btn btn-outline btn-info" onClick={postDetails}>
               Upload Doc
             </button>
           </div>
         </div>
         <div>
-          <h1>Create New</h1>
+          <h1>
+            {uploaded && (
+              <>
+                <div>
+                  <p>{`${uploaded} %`}</p>
+                </div>
+              </>
+            )}
+          </h1>
           <ImageComponents thumnail={thumnail} setThumnail={setThumnail} />
         </div>
       </div>
@@ -178,4 +151,4 @@ const TravelHotels = () => {
   );
 };
 
-export default TravelHotels;
+export default StoryCreate;
