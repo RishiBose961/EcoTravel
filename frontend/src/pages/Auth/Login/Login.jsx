@@ -42,13 +42,12 @@ const Login = () => {
             </h2>
             <p className="mt-2 text-sm text-white">
               Don&apos;t have an account?{" "}
-              <a
-                href="#"
-                title=""
+              <Link
+              to='/register'
                 className="font-semibold text-white transition-all duration-200 hover:underline"
               >
                 Create a free account
-              </a>
+              </Link>
             </p>
             <form onSubmit={submitHandler} method="POST" className="mt-8">
               <div className="space-y-5">

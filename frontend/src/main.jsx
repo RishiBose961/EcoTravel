@@ -22,6 +22,9 @@ import {
 } from "@tanstack/react-query";
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import IndividualHotels from "./pages/IndividualAll/IndividualHotels.jsx";
+import Register from "./pages/Auth/Register/Register.jsx";
+import IndividualTravels from "./pages/IndividualAll/IndividualTravels.jsx";
+import FuelMap from "./pages/FuelMap/FuelMap.jsx";
 
 const queryClient = new QueryClient();
 
@@ -29,10 +32,13 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>
       <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register/>}/>
       <Route path="" element={<PrivateRoute />}>
         <Route index={true} path="/" element={<Home />} />
         <Route path="/new" element={<CreateNew />} />
         <Route path="/hotels/:id" element={<IndividualHotels/>} />
+        <Route path="/travels/:id" element={<IndividualTravels/>} />
+        <Route path="/maps" element={<FuelMap/>}/>
       </Route>
     </Route>
   )

@@ -15,6 +15,7 @@ import { Pagination } from "swiper/modules";
 import Scrollbars from "react-custom-scrollbars-2";
 import EcoFilter from "./EcoFilter";
 import StoryDay from "./StoryDay";
+import  NavBottom  from "../NavBottom/NavBottom";
 
 const EcoList = ({ informUser }) => {
   const { ref, inView } = useInView();
@@ -78,6 +79,8 @@ const EcoList = ({ informUser }) => {
           />
         </div>
         <div>
+          <NavBottom />
+
           <Scrollbars style={{ width: "auto", height: 890 }}>
             <StoryDay />
             <div ref={ref} className=" space-y-4 mb-5">
@@ -144,7 +147,7 @@ const EcoList = ({ informUser }) => {
                         />
                         <Link
                           className="btn btn-primary"
-                          to={`/hotels/${post._id}`}
+                          to={post.hotelname ? `/hotels/${post._id}`:`/travels/${post._id}`}
                         >
                           Book Now
                         </Link>

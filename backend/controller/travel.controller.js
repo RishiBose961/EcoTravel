@@ -10,7 +10,9 @@ export const createTravels = expressAsyncHandler(async (req, res) => {
       country,
       city,
       phone,
+      cheapestPrice,
       imagecar,
+      vehicletype,
       caraddress,
     } = req.body;
 
@@ -18,7 +20,9 @@ export const createTravels = expressAsyncHandler(async (req, res) => {
       !carname ||
       !carnumberplate ||
       !country ||
+      !vehicletype||
       !city ||
+      !cheapestPrice||
       !phone ||
       !caraddress
     ) {
@@ -32,6 +36,8 @@ export const createTravels = expressAsyncHandler(async (req, res) => {
       city,
       phone,
       imagecar,
+      vehicletype,
+      cheapestPrice,
       caraddress,
       location: {
         type: "Point",
@@ -110,3 +116,18 @@ export const getHotelandTravel = expressAsyncHandler(async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 });
+
+
+export const getTravelsbyId = expressAsyncHandler(async (req, res) => {
+  try {
+    const { id } = req.params;
+    const postindividual = await Car.findById({ _id: id }).populate(
+      "postedBy",
+      "username name avatar followers"
+    );
+    // console.log(postindividual.reviews);
+    res.status(201).json(postindividual);
+  } catch (error) {
+    res.status(422).json(error);
+  }
+})

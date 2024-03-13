@@ -11,6 +11,8 @@ const TravelStation = () => {
   const [city, setCity] = useState("");
   const [phone, setPhone] = useState("");
   const [caraddress, setcaraddress] = useState("");
+  const [cheapestPrice, setcheapestPrice] = useState("");
+  const [vehicletype, setvehicletype] = useState("");
   // const [buttonDisabled, setButtonDisabled] = useState(false);
 
   const [url, setUrl] = useState("");
@@ -18,15 +20,35 @@ const TravelStation = () => {
   // eslint-disable-next-line no-unused-vars
   const [uploaded, setUploaded] = useState();
 
-  const [informUser, setinformUser] = useState([]);
-
-  const getLocation = async () => {
-    const location = await axios.get("https://ipapi.co/json");
-    setinformUser(location.data);
-  };
+  const [location, setLocation] = useState(null);
 
   useEffect(() => {
-    getLocation();
+    const getLocation = () => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const { latitude, longitude } = position.coords;
+            setLocation({ latitude, longitude });
+          },
+          (error) => {
+            console.error(error.message);
+          },
+          { enableHighAccuracy: true }
+        );
+      } else {
+        console.error("Geolocation is not supported by this browser.");
+      }
+    };
+
+    getLocation(); // Get the initial location
+
+    // Optionally, you can set up a timer to continuously update the location
+    const locationTracker = setInterval(() => {
+      getLocation();
+    }, 5000); // Update every 5 seconds
+
+    // Clean up the interval when the component unmounts
+    return () => clearInterval(locationTracker);
   }, []);
 
   const navigate = useNavigate();
@@ -45,10 +67,12 @@ const TravelStation = () => {
           phone,
           caraddress,
           city,
+          cheapestPrice,
+          vehicletype,
           // Send all public IDs and URLs for flexibility
           imagecar: url.map((imageDatas) => imageDatas.secure_url),
-          latitude: informUser.latitude,
-          longitude: informUser.longitude,
+          latitude: location.latitude,
+          longitude: location.longitude,
         }),
       })
         .then((res) => res.json())
@@ -153,12 +177,31 @@ const TravelStation = () => {
               />
             </div>
             <div>
-              {/* <label className="label-text">Upload 3 image</label>
+              <label className="label-text">Price</label>
               <input
-                type="file"
-                multiple
-                className="file-input file-input-bordered file-input-primary w-full"
-              /> */}
+                type="number"
+                placeholder="Type here"
+                value={cheapestPrice}
+                onChange={(e) => setcheapestPrice(e.target.value)}
+                className="input input-bordered input-primary w-full capitalize"
+              />
+            </div>
+            <div></div>
+          </div>
+          <div className="mt-1">
+            <label className="label-text">Vehicle Type</label>
+            <div>
+              <select
+                className="select w-full select-primary"
+                onChange={(e) => setvehicletype(e.target.value)}
+                value={vehicletype}
+              >
+                <option value="Electric Vechicle">
+                  Electric Vechicle (EV)
+                </option>
+                <option value="Public Vechile">Public Vechile</option>
+                <option value="Hybrid Vechile">Hybrid Vechile</option>
+              </select>
             </div>
           </div>
           <div className="mt-2">
@@ -172,7 +215,20 @@ const TravelStation = () => {
             />
           </div>
           <div className="flex justify-center mt-4">
-            <button className="btn btn-outline btn-info" onClick={postDetails}>Upload Doc</button>
+            {uploaded ? (
+              <>
+                <div>
+                  <p>{`${uploaded} %`}</p>
+                </div>
+              </>
+            ) : (
+              <button
+                className="btn btn-outline btn-info"
+                onClick={postDetails}
+              >
+                Upload Doc
+              </button>
+            )}
           </div>
         </div>
         <div>
