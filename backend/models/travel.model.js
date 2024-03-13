@@ -30,6 +30,15 @@ const carSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    cheapestPrice:{
+      type:Number,
+      required:true
+    },
+    vehicletype:{
+      type:String,
+      required:true
+    },
+
     location: {
       type: { type: String, required: true },
       coordinates: [],

@@ -1,4 +1,4 @@
-import  { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import ImageComponents from "./ImageComponents";
@@ -17,17 +17,37 @@ const TravelHotels = () => {
   // eslint-disable-next-line no-unused-vars
   const [uploaded, setUploaded] = useState();
 
-  const [informUser, setinformUser] = useState([]);
-
-  const getLocation = async () => {
-    const location = await axios.get("https://ipapi.co/json");
-    setinformUser(location.data);
-  };
+  
+  const [location, setLocation] = useState(null);
 
   useEffect(() => {
-    getLocation();
-  }, []);
+    const getLocation = () => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const { latitude, longitude } = position.coords;
+            setLocation({ latitude, longitude });
+          },
+          (error) => {
+            console.error(error.message);
+          },
+          { enableHighAccuracy: true }
+        );
+      } else {
+        console.error("Geolocation is not supported by this browser.");
+      }
+    };
 
+    getLocation(); // Get the initial location
+
+    // Optionally, you can set up a timer to continuously update the location
+    const locationTracker = setInterval(() => {
+      getLocation();
+    }, 5000); // Update every 5 seconds
+
+    // Clean up the interval when the component unmounts
+    return () => clearInterval(locationTracker);
+  }, []);
 
   const navigate = useNavigate();
   useEffect(() => {
@@ -47,8 +67,8 @@ const TravelHotels = () => {
           cheapestPrice,
           // Send all public IDs and URLs for flexibility
           imagehotel: url.map((imageDatas) => imageDatas.secure_url),
-          latitude: informUser.latitude,
-        longitude: informUser.longitude,
+          latitude: location?.latitude,
+          longitude: location?.longitude,
         }),
       })
         .then((res) => res.json())
@@ -163,7 +183,6 @@ const TravelHotels = () => {
           </div>
 
           <div className="flex justify-center mt-4">
-
             <button className="btn btn-outline btn-info" onClick={postDetails}>
               Upload Doc
             </button>

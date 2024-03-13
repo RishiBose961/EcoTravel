@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import Maps from "../../components/Maps/Maps";
 
-const IndividualHotels = () => {
+const IndividualTravels = () => {
   const { id } = useParams("");
   const { userInfo } = useSelector((state) => state.auth);
 
@@ -12,11 +12,11 @@ const IndividualHotels = () => {
     isPending,
     error,
     isError,
-    data: singlepostData,
+    data: singletravelData,
   } = useQuery({
-    queryKey: ["singlepostDatas", id],
+    queryKey: ["singletravelDatas", id],
     queryFn: async () => {
-      return await fetch(`/api/hotels/getsinglepost/${id}`).then((res) =>
+      return await fetch(`/api/travel/getsingletravel/${id}`).then((res) =>
         res.json()
       );
     },
@@ -27,7 +27,7 @@ const IndividualHotels = () => {
     return <span>Error: {error.message}</span>;
   }
 
-  console.log(singlepostData);
+  console.log(singletravelData);
 
   //   const {
   //     isPending: isLoading,
@@ -53,17 +53,17 @@ const IndividualHotels = () => {
         <div class="container px-5 py-10 mx-auto flex flex-col">
           <div class="lg:w-4/6 mx-auto">
             <p className=" text-xl font-bold text-white pb-4">
-              {singlepostData?.hotelname}
+              {singletravelData?.carname}
             </p>
             <div class="rounded-lg h-64 overflow-hidden">
               <Maps
-                address={singlepostData?.address}
-                city={singlepostData?.city}
-                country={singlepostData?.country}
+                address={singletravelData?.address}
+                city={singletravelData?.city}
+                country={singletravelData?.country}
               />
             </div>
             <div class="flex flex-wrap -mx-4 -mb-10 text-center mt-4">
-              {singlepostData?.imagehotel.map((item) => (
+              {singletravelData?.imagecar.map((item) => (
                 <div class="sm:w-1/2 mb-10 px-4">
                   <div class="rounded-lg h-64 overflow-hidden">
                     <img
@@ -78,20 +78,26 @@ const IndividualHotels = () => {
             <div class="flex flex-col sm:flex-row mt-10">
               <div class="sm:w-1/3 text-center sm:pr-8 sm:py-8">
                 <div class="w-20 h-20 rounded-full inline-flex items-center justify-center bg-gray-800 text-gray-600">
-                  <img src={singlepostData?.postedBy.avatar} alt="loading" />
+                  <img src={singletravelData?.postedBy.avatar} alt="loading"/>
                 </div>
                 <div class="flex flex-col items-center text-center justify-center">
-                <h2 class="font-medium title-font mt-4 text-white text-lg">
-                  {singlepostData?.postedBy.name}
+                  <h2 class="font-medium title-font mt-4 text-white text-lg">
+                  {singletravelData?.postedBy.name}
                   </h2>
-                  <p>{singlepostData?.postedBy.username}</p>
+                  <p>{singletravelData?.postedBy.username}</p>
                   <div class="w-12 h-1 bg-indigo-500 rounded mt-2 mb-4"></div>
                   <p class="text-base text-gray-400"></p>
                 </div>
               </div>
               <div class="sm:w-2/3 sm:pl-8 sm:py-8 sm:border-l border-gray-800 sm:border-t-0 border-t mt-4 pt-4 sm:mt-0 text-center sm:text-left">
+              <p class="leading-relaxed text-lg mb-4">
+                  {singletravelData?.country}
+                </p>
+              <p class="leading-relaxed text-lg mb-4">
+                  {singletravelData?.city}
+                </p>
                 <p class="leading-relaxed text-lg mb-4">
-                  {singlepostData?.hoteladdress}
+                  {singletravelData?.caraddress}
                 </p>
                 <a class="text-indigo-400 inline-flex items-center">
                   Learn More
@@ -116,4 +122,4 @@ const IndividualHotels = () => {
   );
 };
 
-export default IndividualHotels;
+export default IndividualTravels;
