@@ -20,9 +20,9 @@ export const createTravels = expressAsyncHandler(async (req, res) => {
       !carname ||
       !carnumberplate ||
       !country ||
-      !vehicletype||
+      !vehicletype ||
       !city ||
-      !cheapestPrice||
+      !cheapestPrice ||
       !phone ||
       !caraddress
     ) {
@@ -62,43 +62,36 @@ export const getHotelandTravel = expressAsyncHandler(async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 4;
     const country = req.query.country || "";
-    const city = req.query.city || "";
+    const city = req.query.city;
+    const min = req.query.min || "";
+    const max = req.query.max || "";
 
     let query = {};
 
     if (country !== "All") {
       query.country = country;
     }
-    if (city !== "All") {
+    if (city && city !== "All") {
       query.city = city;
     }
 
     const allPosts = await Hotel.find({
       ...query,
+      cheapestPrice: { $gt: min || 1, $lt: max || 9999 },
     })
       .populate("postedBy", "username name avatar")
       .sort({ createdAt: -1 });
 
     const postsWithTag = await Car.find({
       ...query,
+      cheapestPrice: { $gt: min || 1, $lt: max || 9999 },
     })
       .populate("postedBy", "username name avatar")
-
       .sort({ createdAt: -1 });
-    const combinedData = [];
-    for (let i = 0; i < Math.max(allPosts.length, postsWithTag.length); i++) {
-      if (i < allPosts.length) {
-        combinedData.push(allPosts[i]);
-      }
-      if (i < postsWithTag.length) {
-        combinedData.push(postsWithTag[i]);
-      }
-    }
 
-    const postcount = combinedData.length;
+    const combinedData = [...allPosts, ...postsWithTag];
 
-    // Apply pagination:
-    const totalPosts = postcount;
+    const totalPosts = combinedData.length;
     const totalPages = Math.ceil(totalPosts / limit);
 
     let currentPages;
@@ -130,4 +123,4 @@ export const getTravelsbyId = expressAsyncHandler(async (req, res) => {
   } catch (error) {
     res.status(422).json(error);
   }
-})
+});

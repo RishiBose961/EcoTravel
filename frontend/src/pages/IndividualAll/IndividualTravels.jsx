@@ -27,7 +27,6 @@ const IndividualTravels = () => {
     return <span>Error: {error.message}</span>;
   }
 
-  console.log(singletravelData);
 
   //   const {
   //     isPending: isLoading,

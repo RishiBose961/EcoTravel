@@ -3,18 +3,16 @@ import { Marker, Popup, useMap } from "react-leaflet";
 
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import icon from "leaflet/dist/images/marker-icon.png";
-import iconShadow from "leaflet/dist/images/marker-shadow.png";
 import * as ELG from "esri-leaflet-geocoder";
 
 let DefaultIcon = L.icon({
-  iconUrl: icon,
-  shadowUrl: iconShadow,
+    iconUrl: './plug-zap.png',
+    shadowUrl: './plug-zap.png',
 });
 
 L.Marker.prototype.options.icon = DefaultIcon;
 
-const GeoCoderMarker = ({ address, hotelnames ,setlatitudes,setlongitudes}) => {
+const GeoCoderMarkesr = ({ address, hotelnames }) => {
   const map = useMap();
   const [position, setPosition] = useState([60, 19]); // Default position
 
@@ -37,12 +35,6 @@ const GeoCoderMarker = ({ address, hotelnames ,setlatitudes,setlongitudes}) => {
 
   // console.log(position);
 
- 
-  setlatitudes(position[0])
-  setlongitudes(position[1])
-
-  console.log(setlatitudes);
-
   return (
     <Marker position={position} icon={DefaultIcon} draggable={true} eventHandlers={{ dragend: handleMarkerDrag }}>
       <Popup>
@@ -54,4 +46,4 @@ const GeoCoderMarker = ({ address, hotelnames ,setlatitudes,setlongitudes}) => {
   );
 };
 
-export default GeoCoderMarker;
+export default GeoCoderMarkesr;

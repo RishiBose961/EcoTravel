@@ -1,29 +1,106 @@
-import React from 'react'
-import Maps from '../../components/Maps/Maps'
-import MapFuels from '../../components/MapFuels/MapFuels'
+import React, { useState } from 'react'
+import { MapContainer, TileLayer } from "react-leaflet";
+
+import "leaflet/dist/leaflet.css";
+
+import Routing from "./Routing";
+import { useQuery } from '@tanstack/react-query';
+import GeoCoderMarkesr from '../../components/Maps/GeoCoderMarkesr';
+import CraeteModelMap from './CraeteModelMap';
+
+
+
+
+
+
 
 const FuelMap = () => {
-  return (
-    <div>
-        <MapFuels/>
+  const [latitudeone,setlatitudeone] = useState("")
+  const [latitudetwo,setlatitudetwo] = useState("")
+  const [longitudeone,setlongitudeone] = useState("")
+  const [longitudetwo,setlongitudetwo] = useState("")
+
+  const position = [23.3426, 85.3099];
+
+  const fetchProduct = async () => {
+    const response = await fetch(
+      `/api/charging/23.3426/85.3099`
+    );
+    const data = await response.json();
+    return data;
+  };
+  
+  const {
+    isPending,
+    isError,
+    error,
+    data: product,
+  } = useQuery({
+    queryKey: ["productss"],
+    queryFn: fetchProduct,
+    staleTime: 10000,
+  });
+  
+  if (isPending) {
+    return <span>Loading...</span>;
+  }
+  
+  if (isError) {
+    return <span>Error: {error.message}</span>;
+  }
+  
+  
+
+
+  const chargeClick = async () => {
+    try {
+      const response = await fetch("/api/latlong/newlatlong", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          latitudeone: latitudeone,
+          longitudeone: longitudeone,
+          latitudetwo: latitudetwo,
+          longitudetwo: longitudetwo,
+        }),
+      });
+      
+      const data = await response.json();
+      
+      if (data.error) {
+        alert("Something went wrong");
+      } else {
+        alert(`Successfully created`);
         
-
-<div class="fixed z-50 w-full h-16 max-w-lg -translate-x-1/2 bg-white border border-gray-200 rounded-full bottom-4 left-1/2 dark:bg-gray-700 dark:border-gray-600">
-    <div class="flex justify-center  items-center space-x-6 pt-1">
-       <div className='flex justify-start items-center space-x-3'>
-        <p>From</p>
-        <input type="text" placeholder="Type here" className="input input-bordered input-primary w-40" />
-       </div>
-       <div className='flex justify-start items-center space-x-3'>
-        <p>To</p>
-        <input type="text" placeholder="Type here" className="input input-bordered input-primary w-40" />
-       </div>
-       
-
-    </div>
-</div>
-
-    </div>
+      }
+    } catch (err) {
+      console.log(err.message);
+      // Handle errors here
+    } finally {
+      // setButtonDisabled(false);
+    }
+  };
+  
+  return (
+    <>
+   <button onClick={chargeClick}>Create</button>
+     <MapContainer center={position} zoom={13} style={{ height: "100vh" }} >
+      <TileLayer
+        attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      />
+     
+      {
+        product.data.map((item)=>(
+          <GeoCoderMarkesr address={`${item.chargingaddress} ${item.city} ${item.country}`} />
+        ))
+      }
+      <Routing setlatitudeone={setlatitudeone} setlongitudeone={setlongitudeone} setlatitudetwo={setlatitudetwo} setlongitudetwo={setlongitudetwo}/>
+    </MapContainer>
+    </>
+   
   )
 }
 

@@ -57,6 +57,7 @@ const IndividualHotels = () => {
             </p>
             <div class="rounded-lg h-64 overflow-hidden">
               <Maps
+              hotelnames={singlepostData?.hotelname}
                 address={singlepostData?.address}
                 city={singlepostData?.city}
                 country={singlepostData?.country}
